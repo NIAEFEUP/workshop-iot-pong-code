@@ -1,11 +1,27 @@
-import pygame as pg
 import random
+import max7219
+import time
+from machine import Pin, SPI, ADC
 
-DISPLAY_WIDTH = 1280
-DISPLAY_HEIGHT = 400
-FPS = 60
-BALL_SPEED = 10
-ELEMENT_DISPLAY_SIZE = 40
+DISPLAY_WIDTH = 32
+DISPLAY_HEIGHT = 8
+FPS = 20
+BALL_SPEED = 20
+ELEMENT_DISPLAY_SIZE = 1
+
+# Initialize pico
+led = Pin(25, Pin.OUT)
+
+yAxis = ADC(Pin(26))
+button = Pin(17, Pin.IN, Pin.PULL_UP)
+
+yAxis2 = ADC(Pin(28))
+button2 = Pin(19, Pin.IN, Pin.PULL_UP)
+
+spi = SPI(0, polarity=1, phase=0, sck=Pin(2), mosi=Pin(3))
+cs = Pin(5, Pin.OUT)
+
+display = max7219.Matrix8x8(spi, cs, 4)
 
 
 class Element:
@@ -36,14 +52,17 @@ def init_game(width, height):
     for _ in range(height):
         game.append([Element.EMPTY] * width)
 
+    leftPaddleOffset = random.randrange(-2, 3)
+    rightPaddleOffset = random.randrange(-2, 3)
+
     # Set initial positions
     game[height // 2][width // 2] = Element.BALL
 
-    game[height // 2 - 1][0] = Element.LEFT_PADDLE
-    game[height // 2][0] = Element.LEFT_PADDLE
+    game[height // 2 - 1 + leftPaddleOffset][0] = Element.LEFT_PADDLE
+    game[height // 2 + leftPaddleOffset][0] = Element.LEFT_PADDLE
 
-    game[height // 2 - 1][width - 1] = Element.RIGHT_PADDLE
-    game[height // 2][width - 1] = Element.RIGHT_PADDLE
+    game[height // 2 - 1 + rightPaddleOffset][width - 1] = Element.RIGHT_PADDLE
+    game[height // 2 + rightPaddleOffset][width - 1] = Element.RIGHT_PADDLE
 
     return game
 
@@ -141,19 +160,22 @@ def game_move_right_paddle(game, direction):
         game[pos[1] + 2][pos[0]] = Element.RIGHT_PADDLE
 
 
-def draw_game(game, screen):
-    # Draw game matrix
+def draw_game(game):
+    # clear display
+    display.fill(0)
+
+    # draw game
     for y, row in enumerate(game):
         for x, element in enumerate(row):
-            if element == Element.LEFT_PADDLE:
-                pg.draw.rect(screen, (255, 255, 255), (x * ELEMENT_DISPLAY_SIZE, y *
-                             ELEMENT_DISPLAY_SIZE, ELEMENT_DISPLAY_SIZE, ELEMENT_DISPLAY_SIZE))
-            elif element == Element.RIGHT_PADDLE:
-                pg.draw.rect(screen, (255, 255, 255), (x * ELEMENT_DISPLAY_SIZE, y *
-                             ELEMENT_DISPLAY_SIZE, ELEMENT_DISPLAY_SIZE, ELEMENT_DISPLAY_SIZE))
+            chunkIdx = x // 8
+            chunkPos = x % 8
+            ledX = (chunkIdx * 8) + 7 - chunkPos
+            if element == Element.LEFT_PADDLE or element == Element.RIGHT_PADDLE:
+                display.pixel(ledX, y, 1)
             elif element == Element.BALL:
-                pg.draw.circle(screen, (255, 255, 255),
-                               (x * ELEMENT_DISPLAY_SIZE + ELEMENT_DISPLAY_SIZE // 2, y * ELEMENT_DISPLAY_SIZE + ELEMENT_DISPLAY_SIZE // 2), ELEMENT_DISPLAY_SIZE // 2)
+                display.pixel(ledX, y, 1)
+
+    display.show()
 
 
 def game_update_ball(game, current_directions):
@@ -204,11 +226,6 @@ def game_update_ball(game, current_directions):
 
 
 def main():
-    # Initialize pygame
-    pg.init()
-    screen = pg.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
-    clock = pg.time.Clock()
-
     # Initialize pong game
     game = init_game(DISPLAY_WIDTH // ELEMENT_DISPLAY_SIZE,
                      DISPLAY_HEIGHT // ELEMENT_DISPLAY_SIZE)
@@ -220,19 +237,26 @@ def main():
     while running:
         counter += 1
 
-        # Handle events
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                running = False
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_w:
-                    game_move_left_paddle(game, Direction.UP)
-                elif event.key == pg.K_s:
-                    game_move_left_paddle(game, Direction.DOWN)
-                elif event.key == pg.K_UP:
-                    game_move_right_paddle(game, Direction.UP)
-                elif event.key == pg.K_DOWN:
-                    game_move_right_paddle(game, Direction.DOWN)
+        yValue = yAxis.read_u16()
+        yValue2 = yAxis2.read_u16()
+
+        buttonValue = button.value()
+        buttonValue2 = button2.value()
+
+        if buttonValue == 0 or buttonValue2 == 0:
+            led.value(1)
+        else:
+            led.value(0)
+
+        if yValue <= 600:
+            game_move_left_paddle(game, Direction.DOWN)
+        elif yValue >= 60000:
+            game_move_left_paddle(game, Direction.UP)
+
+        if yValue2 <= 600:
+            game_move_right_paddle(game, Direction.DOWN)
+        elif yValue2 >= 60000:
+            game_move_right_paddle(game, Direction.UP)
 
         # Update ball
         if counter % (FPS // BALL_SPEED) == 0:
@@ -240,13 +264,8 @@ def main():
                 game, current_directions)
 
         # Draw game
-        screen.fill((0, 0, 0))
-        draw_game(game, screen)
-        pg.display.flip()
-        clock.tick(FPS)
-
-    # Quit pygame
-    pg.quit()
+        draw_game(game)
+        time.sleep(1 / FPS)
 
 
 if __name__ == "__main__":
