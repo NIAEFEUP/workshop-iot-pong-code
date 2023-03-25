@@ -3,13 +3,21 @@
   "author": "Anonymous maker",
   "editor": "wokwi",
   "parts": [
-    { "type": "wokwi-pi-pico", "id": "pico", "top": 53.33, "left": -70.67, "attrs": {} },
+    {
+      "type": "wokwi-pi-pico",
+      "id": "pico",
+      "top": 53.33,
+      "left": -70.67,
+      "attrs": {}
+    },
     {
       "type": "wokwi-max7219-matrix",
       "id": "matrix1",
       "top": -5.81,
       "left": -482.04,
-      "attrs": { "chain": "4" }
+      "attrs": {
+        "chain": "4"
+      }
     },
     {
       "type": "wokwi-analog-joystick",
@@ -17,21 +25,140 @@
       "top": 29.43,
       "left": 76.69,
       "attrs": {}
+    },
+    {
+      "type": "wokwi-analog-joystick",
+      "id": "joystick2",
+      "top": 314.6,
+      "left": -235.67,
+      "attrs": {}
     }
   ],
   "connections": [
-    [ "pico:GP0", "$serialMonitor:RX", "", [] ],
-    [ "pico:GP1", "$serialMonitor:TX", "", [] ],
-    [ "joystick1:VCC", "pico:3V3", "red", [ "v0" ] ],
-    [ "joystick1:VERT", "pico:GP26", "green", [ "v0" ] ],
-    [ "joystick1:HORZ", "pico:GP27", "green", [ "v0" ] ],
-    [ "joystick1:SEL", "pico:GP17", "green", [ "v0" ] ],
-    [ "joystick1:GND", "pico:GND.8", "black", [ "v0" ] ],
-    [ "matrix1:V+", "pico:VBUS", "green", [ "h0" ] ],
-    [ "matrix1:GND", "pico:GND.1", "black", [ "h0" ] ],
-    [ "matrix1:DIN", "pico:GP3", "green", [ "h0" ] ],
-    [ "matrix1:CS", "pico:GP5", "green", [ "h0" ] ],
-    [ "matrix1:CLK", "pico:GP2", "green", [ "h0" ] ]
+    [
+      "pico:GP0",
+      "$serialMonitor:RX",
+      "",
+      []
+    ],
+    [
+      "pico:GP1",
+      "$serialMonitor:TX",
+      "",
+      []
+    ],
+    [
+      "joystick1:VCC",
+      "pico:3V3",
+      "red",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick1:VERT",
+      "pico:GP26",
+      "green",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick1:HORZ",
+      "pico:GP27",
+      "green",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick1:SEL",
+      "pico:GP17",
+      "green",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick1:GND",
+      "pico:GND.8",
+      "black",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "matrix1:V+",
+      "pico:VBUS",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "matrix1:GND",
+      "pico:GND.1",
+      "black",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "matrix1:DIN",
+      "pico:GP3",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "matrix1:CS",
+      "pico:GP5",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "matrix1:CLK",
+      "pico:GP2",
+      "green",
+      [
+        "h0"
+      ]
+    ],
+    [
+      "joystick2:VCC",
+      "pico:3V3",
+      "red",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick2:SEL",
+      "pico:GP19",
+      "green",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick2:GND",
+      "pico:GND.6",
+      "black",
+      [
+        "v0"
+      ]
+    ],
+    [
+      "joystick2:VERT",
+      "pico:GP28",
+      "green",
+      [
+        "v0"
+      ]
+    ]
   ],
   "dependencies": {}
 }
