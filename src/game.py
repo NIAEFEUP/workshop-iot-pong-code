@@ -6,7 +6,7 @@ from machine import Pin, SPI, ADC
 DISPLAY_WIDTH = 32
 DISPLAY_HEIGHT = 8
 FPS = 20
-BALL_SPEED = 20
+BALL_SPEED = 12
 ELEMENT_DISPLAY_SIZE = 1
 
 # Initialize pico
@@ -68,7 +68,6 @@ def init_game(width, height):
 
 
 def get_ball_position(game):
-    # Get ball position
     ball_pos = None
     for y, row in enumerate(game):
         for x, element in enumerate(row):
@@ -77,19 +76,12 @@ def get_ball_position(game):
                 break
         if ball_pos is not None:
             break
-
-    # Check if ball position is valid
-    if ball_pos is None:
-        raise ValueError("Ball not found in game matrix")
-
-    return ball_pos
+    return ball_pos if ball_pos != None else [0,0]
 
 
 def game_move_ball(game, directions):
-    # Get ball position
     ball_pos = get_ball_position(game)
 
-    # Move ball
     for direction in directions:
         if direction == Direction.UP:
             game[ball_pos[1]][ball_pos[0]] = Element.EMPTY
@@ -106,58 +98,27 @@ def game_move_ball(game, directions):
         ball_pos = get_ball_position(game)
 
 
-def game_move_left_paddle(game, direction):
-    # Get left paddle positions
+def game_move_paddle(game, direction, paddle):
+    # Get paddle position
     pos = []
     for y, row in enumerate(game):
         for x, element in enumerate(row):
-            if element == Element.LEFT_PADDLE and pos == []:
+            if element == paddle and pos == []:
                 pos = (x, y)
 
-    # Check if left paddle positions are valid
-    if pos == []:
-        raise ValueError("Left paddle not found in game matrix")
-
-    # Check if left paddle is at top or bottom of screen
+    # Check if paddle is at top or bottom of screen
     if pos[1] == 0 and direction == Direction.UP:
         return
-    if pos[1] == len(game) - 2 and direction == Direction.DOWN:
+    if pos[1] >= len(game) - 2 and direction == Direction.DOWN:
         return
 
-    # Move left paddle
-    if direction == Direction.UP:
+    # Move paddle
+    if direction == Direction.UP and game[pos[1] - 1][pos[0]] == Element.EMPTY:
         game[pos[1] + 1][pos[0]] = Element.EMPTY
-        game[pos[1] - 1][pos[0]] = Element.LEFT_PADDLE
-    elif direction == Direction.DOWN:
+        game[pos[1] - 1][pos[0]] = paddle
+    elif direction == Direction.DOWN and game[pos[1] + 2][pos[0]] == Element.EMPTY:
         game[pos[1]][pos[0]] = Element.EMPTY
-        game[pos[1] + 2][pos[0]] = Element.LEFT_PADDLE
-
-
-def game_move_right_paddle(game, direction):
-    # Get right paddle positions
-    pos = []
-    for y, row in enumerate(game):
-        for x, element in enumerate(row):
-            if element == Element.RIGHT_PADDLE and pos == []:
-                pos = (x, y)
-
-    # Check if right paddle positions are valid
-    if pos == []:
-        raise ValueError("Right paddle not found in game matrix")
-
-    # Check if right paddle is at top or bottom of screen
-    if pos[1] == 0 and direction == Direction.UP:
-        return
-    if pos[1] == len(game) - 2 and direction == Direction.DOWN:
-        return
-
-    # Move right paddle
-    if direction == Direction.UP:
-        game[pos[1] + 1][pos[0]] = Element.EMPTY
-        game[pos[1] - 1][pos[0]] = Element.RIGHT_PADDLE
-    elif direction == Direction.DOWN:
-        game[pos[1]][pos[0]] = Element.EMPTY
-        game[pos[1] + 2][pos[0]] = Element.RIGHT_PADDLE
+        game[pos[1] + 2][pos[0]] = paddle
 
 
 def draw_game(game):
@@ -167,13 +128,10 @@ def draw_game(game):
     # draw game
     for y, row in enumerate(game):
         for x, element in enumerate(row):
-            chunkIdx = x // 8
-            chunkPos = x % 8
-            ledX = (chunkIdx * 8) + 7 - chunkPos
             if element == Element.LEFT_PADDLE or element == Element.RIGHT_PADDLE:
-                display.pixel(ledX, y, 1)
+                display.pixel(x, y, 1)
             elif element == Element.BALL:
-                display.pixel(ledX, y, 1)
+                display.pixel(x, y, 1)
 
     display.show()
 
@@ -243,25 +201,26 @@ def main():
         buttonValue = button.value()
         buttonValue2 = button2.value()
 
+        # Flash light when button pressed (smoke)
         if buttonValue == 0 or buttonValue2 == 0:
             led.value(1)
         else:
             led.value(0)
-
-        if yValue <= 600:
-            game_move_left_paddle(game, Direction.DOWN)
-        elif yValue >= 60000:
-            game_move_left_paddle(game, Direction.UP)
-
-        if yValue2 <= 600:
-            game_move_right_paddle(game, Direction.DOWN)
-        elif yValue2 >= 60000:
-            game_move_right_paddle(game, Direction.UP)
-
+            
         # Update ball
         if counter % (FPS // BALL_SPEED) == 0:
             game, current_directions = game_update_ball(
                 game, current_directions)
+
+        # Move paddles
+        if yValue <= 1000:
+            game_move_paddle(game, Direction.DOWN, Element.LEFT_PADDLE)
+        elif yValue >= 40000:
+            game_move_paddle(game, Direction.UP, Element.LEFT_PADDLE)
+        if yValue2 <= 1000:
+            game_move_paddle(game, Direction.DOWN, Element.RIGHT_PADDLE)
+        elif yValue2 >= 40000:
+            game_move_paddle(game, Direction.UP, Element.RIGHT_PADDLE)
 
         # Draw game
         draw_game(game)
