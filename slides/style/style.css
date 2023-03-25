@@ -75,6 +75,11 @@ h3 {
     height: 220px;
 }
 
+.extra-images img {
+    width: 65%;
+    height: 50%;
+}
+
 .image-spaced img {
     padding-top: 80px;
 }

@@ -12,6 +12,12 @@ class: inverse
 2. Programar em Python
 3. Hello World - O Primeiro Programa
 4. Variáveis
+5. Operações com listas
+6. Operações aritméticas
+7. Condições
+8. Ciclos
+9. Funções
+10. Instruções do workshop
 
 ---
 class: image-spaced
@@ -225,5 +231,19 @@ class: center, middle
 
 ---
 class: center, middle, inverse, medium-images
-# Fim!
+# Fim? 
 ![](./images/finalmeme.jpeg)
+
+---
+class: center, middle, inverse
+# Nope! Preparem-se para a fun part >:)
+---
+class: extra-images
+# Instruções do workshop
+
+- **Task 1**: Procura a variável correspondente à velocidade da bola e muda o seu valor
+- **Task 2**: Tenta desenhar apenas a bola
+- **Task 3**: Tenta desenhar uma linha vertical no meio campo
+
+
+![](./images/pong.jpg)
