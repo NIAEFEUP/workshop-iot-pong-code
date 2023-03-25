@@ -18,15 +18,17 @@ class: inverse
 8. Ciclos
 9. Funções
 10. Instruções do workshop
+---
+class: extra-images
+
+# Introdução à programação
+De modo a criar qualquer programa em computador, utiliza-se normalmente uma **linguagem de alto nível** à nossa escolha (p.ex: Java, C++, Python), a qual será depois traduzida para algo que o computador consiga executar.
+
+
+![](./images/semicolon.jpg)
 
 ---
-class: image-spaced
-
-# Programação - O que é?
-**Linguagens de Alto Nível** - Linguagens de Programação, como Java, C++ ou Python, que precisam de ser traduzidas para algo que o computador consiga executar.
-![](./images/prog.jpeg)
-
----
+Existem dois tipos de linguagens:
 
 **Linguagens Compiladas** - Linguagem que, após compilada, gera machine code (código-máquina) - C++, C, C#...
 
@@ -38,8 +40,7 @@ class: image-spaced
 ---
 class: small-images, image-spaced
 
-# Programar em Python
-- **Replit**: https://replit.com/
+# Referências para programar em python
 - GDB: https://www.onlinegdb.com/
 - Python 3.10 (Shell): https://www.python.org/downloads/release/python-3100/
 - **VS Code**: https://code.visualstudio.com/
@@ -47,44 +48,25 @@ class: small-images, image-spaced
 - **Spyder/Anaconda**: https://www.anaconda.com/
 
 ---
-class: center, middle
-![](./images/ide.jpg)
-
----
-# Programar em Python
-## The Zen of Python
-- Beautiful is better than ugly
-- Explicit is better than implicit
-- Simple is better than complex
-- Complex is better than complicated
-- Readability counts
-- ...(it goes on but you get the point)
-
----
-class: center, middle
-![](./images/cowabunga.jpg)
+class: medium-images, center, middle
+![](./images/space_block.webp)
 
 ---
 
-# Hello World!
-O programa "Hello World" é o típico primeiro programa que todos os iniciantes fazem numa qualquer nova linguagem de programação; em Python, este programa destaca-se pela sua simplicidade (o mesmo programa em C++ abaixo, **apenas** para efeitos de comparação):
+
+# "Olá Mundo!"
+O programa "Hello World" é o típico primeiro programa que todos os iniciantes fazem numa qualquer nova linguagem de programação; em Python, este programa destaca-se pela sua simplicidade (o mesmo programa em Java abaixo, **apenas** para efeitos de comparação):
 
 ```python
-# O teu primeiro programa em Python! :)
-
+# O teu primeiro programa em Python! :D
 print("Hello World!")
 ```
-```cpp
-// Não tentem isto em casa
-#include <iostream>
-
-using namespace std;
-
-int main()
-{
-    cout<<"Hello World";
-
-    return 0;
+```Java
+// Se possível, não toquem em Java :,D
+class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello World!");
+    }
 }
 ```
 
@@ -107,11 +89,17 @@ Há 6 tipos de variáveis nativos de python (i.e, não necessitamos de ferrament
 - Números (ints e floats) (ex: **4** e **3.14159**, respetivamente)
 - Booleanos (Verdadeiro ou Falso) (ex: **True** e **False**, respetivamente)
 - Strings (Cadeias de caracteres) (ex: **"O curso é bom (juro)"**) <-- **Não mutáveis!!**
-- Listas (ex: **["a", -3, True]**) 
+- Listas (ex: **["a", -3, True]**)
 - Dicionários (ex: **{"jogo": "Undertale", "score": 9}**)
 - Tuplos (ex: **(2,3)**) <-- **Não mutáveis!!**
 
-Há que mencionar que se pode mudar o valor de uma dada variável com o valor de p.ex **2** para o valor **"João"** em qualquer parte do código, visto que não se atribui nenhum tipo específico às variáveis em python (ao contrário de p.ex C++).
+```python
+var = 2         # variável com um valor inteiro
+var1 = "spe"    # variável com uma string associada
+var = var1
+print(var)      # o resultado será "spe" visto que não há erro (em Python!) em associar
+                # novamente uma variável com um tipo de valor diferente do inicial
+```
 
 ---
 # Operações com listas
@@ -149,7 +137,14 @@ Em python, existem 7 principais operações numéricas que se podem realizar:
 - **//** (divisão inteira)
 - **%** (resto)
 
-Uma divisão não inteira entre p.ex **3** e **2** vai dar naturalmente um número em **float** (1.5 no caso), o que não acontece em outras linguagens como C++.
+```python
+print(3*2)      # 6
+print(1/2)      # 0.5
+print(4%3)      # 1
+print(4**2)     # 16
+print(5//2)     # 2, pois arredonda para baixo
+
+```
 ---
 class: center, middle
 
@@ -162,7 +157,7 @@ class: center, middle, inverse
 ---
 # Condições
 
-De modo a estabelecer comportamentos específicos do programa quando o mesmo cumpre certos requisitos, utiliza-se os **if** **else** *statements*. 
+De modo a estabelecer comportamentos específicos do programa quando o mesmo cumpre certos requisitos, utiliza-se os **if** **else** *statements*.
 - **"if"**: se a condição proposta for verdadeira, executa o código deste bloco
 - **"elif"**: ("else" + "if") se a(s) condição/condições proposta(s) anteriormente forem falsas e esta verdadeira, executa o código deste bloco
 - **"else"**: caso nenhuma das condições anteriores seja verdade, executa este bloco
@@ -174,6 +169,24 @@ Para criar as condições usadas nestes blocos de código, podem-se usar alguns 
 - **"and"** e **"or"** (**logic AND** e **logic OR**)
 - **"not"** (**logic NOT**)
 
+---
+# Condições
+
+```python
+num = 2
+
+if(num <= 1):                               # verificará se o valor da variável num
+    print("It is 1 or less!")               # é inferior ou igual a 1
+
+elif(num == 0):                             # verificará se o valor da variável num
+    print("It has the value of 0")          # é igual a 0
+
+else:                                       # executará este print, pois não conseguiu
+    print("Idk what this is my friend :(")  # encontrar nenhuma condição
+                                            # que fosse satisfeita
+
+
+```
 
 ---
 class: center, middle
@@ -217,7 +230,7 @@ def amongus(int x):         # Verifica se um número x é par
     return (x % 2 == 0)
 
 for num in range(11):
-    if amongus(num): print(num) # imprime todos os números pares de 1 a 10 
+    if amongus(num): print(num) # imprime todos os números pares de 1 a 10
     else: continue
 
 ```
@@ -231,7 +244,7 @@ class: center, middle
 
 ---
 class: center, middle, inverse, medium-images
-# Fim? 
+# Fim?
 ![](./images/finalmeme.jpeg)
 
 ---
