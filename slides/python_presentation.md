@@ -255,8 +255,8 @@ class: extra-images
 # Instruções do workshop
 
 - **Task 1**: Procura a variável correspondente à velocidade da bola e muda o seu valor
-- **Task 2**: Tenta desenhar apenas a bola
-- **Task 3**: Tenta desenhar uma linha vertical no meio campo
+- **Task 2**: Desenha um quadrado 4x4 no meio campo
+- **Task 3**: Faz o mesmo que a task 2 mas trabalhando com ciclos for
 
 
 ![](./images/pong.jpg)
