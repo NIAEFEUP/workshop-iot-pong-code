@@ -54,6 +54,10 @@ def init_game(width, height):
 
     leftPaddleOffset = random.randrange(-2, 3)
     rightPaddleOffset = random.randrange(-2, 3)
+    
+    # Avoid symmetry
+    if leftPaddleOffset == rightPaddleOffset:
+        leftPaddleOffset += 1
 
     # Set initial positions
     game[height // 2][width // 2] = Element.BALL
@@ -197,15 +201,6 @@ def main():
 
         yValue = yAxis.read_u16()
         yValue2 = yAxis2.read_u16()
-
-        buttonValue = button.value()
-        buttonValue2 = button2.value()
-
-        # Flash light when button pressed (smoke)
-        if buttonValue == 0 or buttonValue2 == 0:
-            led.value(1)
-        else:
-            led.value(0)
             
         # Update ball
         if counter % (FPS // BALL_SPEED) == 0:
