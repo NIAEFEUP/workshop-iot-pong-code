@@ -213,7 +213,7 @@ for num in range(1, 5):
 for num in range(1, 5, 2):
     # Executa algo 2 vezes (quando num == 1 e num == 1+2)
 
-while(num<10):
+while num<10:
     # Executa algo enquanto a variável num for inferior a 10
 ```
 Se se quiser sair de um loop a uma dada altura, basta declarar um **break** enquanto que, para ignorar uma dada etapa do loop, pode-se utilizar o **continue**.
@@ -226,11 +226,11 @@ class: center, middle, inverse
 As funções em Python têm como pincipal papel facilitar uma melhor organização, tornando o código mais "reciclável".
 
 ```python
-def amongus(int x):         # Verifica se um número x é par
-    return (x % 2 == 0)
+def pair(x):         # Verifica se um número x é par
+    return x % 2 == 0
 
 for num in range(11):
-    if amongus(num): print(num) # imprime todos os números pares de 1 a 10
+    if pair(num): print(num) # imprime todos os números pares de 1 a 10
     else: continue
 
 ```
