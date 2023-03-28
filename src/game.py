@@ -5,8 +5,8 @@ from machine import Pin, SPI, ADC
 
 DISPLAY_WIDTH = 32
 DISPLAY_HEIGHT = 8
-FPS = 20
-BALL_SPEED = 12
+FPS = 60
+BALL_SPEED = 15
 ELEMENT_DISPLAY_SIZE = 1
 
 # Initialize pico
@@ -197,7 +197,6 @@ def main():
     current_directions = [Direction.RIGHT, Direction.DOWN]
     counter = 0
     while running:
-        counter += 1
 
         yValue = yAxis.read_u16()
         yValue2 = yAxis2.read_u16()
@@ -206,20 +205,24 @@ def main():
         if counter % (FPS // BALL_SPEED) == 0:
             game, current_directions = game_update_ball(
                 game, current_directions)
-
+            counter = 0
+            
         # Move paddles
-        if yValue <= 1000:
-            game_move_paddle(game, Direction.DOWN, Element.LEFT_PADDLE)
-        elif yValue >= 40000:
-            game_move_paddle(game, Direction.UP, Element.LEFT_PADDLE)
-        if yValue2 <= 1000:
-            game_move_paddle(game, Direction.DOWN, Element.RIGHT_PADDLE)
-        elif yValue2 >= 40000:
-            game_move_paddle(game, Direction.UP, Element.RIGHT_PADDLE)
+        if counter % 2 == 0:
+            if yValue <= 1000:
+                game_move_paddle(game, Direction.DOWN, Element.LEFT_PADDLE)
+            elif yValue >= 40000:
+                game_move_paddle(game, Direction.UP, Element.LEFT_PADDLE)
+            if yValue2 <= 1000:
+                game_move_paddle(game, Direction.DOWN, Element.RIGHT_PADDLE)
+            elif yValue2 >= 40000:
+                game_move_paddle(game, Direction.UP, Element.RIGHT_PADDLE) 
 
         # Draw game
         draw_game(game)
         time.sleep(1 / FPS)
+        counter += 1
+        
 
 
 if __name__ == "__main__":
