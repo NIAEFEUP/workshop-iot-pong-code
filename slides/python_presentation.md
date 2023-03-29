@@ -8,9 +8,9 @@ class: inverse
 
 # Temas
 
-1. Programação - O que é?
-2. Programar em Python
-3. Hello World - O Primeiro Programa
+1. Introdução à programação
+2. Referências para programar em python
+3. "Olá Mundo!"
 4. Variáveis
 5. Operações com listas
 6. Operações aritméticas
