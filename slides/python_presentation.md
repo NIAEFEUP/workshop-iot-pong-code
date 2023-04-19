@@ -189,14 +189,10 @@ else:                                       # executará este print, pois não c
 ```
 
 ---
-class: center, middle
 
-![](./images/conditions.jpg)
-
-
----
 class: center, middle, inverse
 # Ciclos
+
 ---
 
 # Ciclos
