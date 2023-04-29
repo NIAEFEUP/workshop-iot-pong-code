@@ -258,5 +258,6 @@ class: extra-images
 - **Task 2**: Desenha um quadrado 4x4 no meio campo
 - **Task 3**: Desenha a pontuação atual do jogo e faz com que esta seja atualizada sempre que qualquer um dos jogadores marque
 
+- **Bónus**: Tenta mudar as mecânicas do jogo ao ponto de o tornares semelhante a ice hockey
 
 ![](./images/pong.jpg)
