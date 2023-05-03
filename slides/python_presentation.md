@@ -256,7 +256,7 @@ class: extra-images
 
 - **Task 1**: Procura a variável correspondente à velocidade da bola e muda o seu valor
 - **Task 2**: Desenha um quadrado 4x4 no meio campo
-- **Task 3**: Desenha a pontuação atual do jogo e faz com que esta seja atualizada sempre que qualquer um dos jogadores marque
+- **Task 3**: Desenha a pontuação atual do jogo sempre que há um golo em qualquer um dos lados,  mantendo-na no ecrã durante 2 segundos sempre que o mesmo ocorre
 
 - **Bónus**: Tenta mudar as mecânicas do jogo ao ponto de o tornares semelhante a ice hockey
 
