@@ -28,16 +28,7 @@ De modo a criar qualquer programa em computador, utiliza-se normalmente uma **li
 ![](./images/semicolon.jpg)
 
 ---
-Existem dois tipos de linguagens:
 
-**Linguagens Compiladas** - Linguagem que, após compilada, gera machine code (código-máquina) - C++, C, C#...
-
-**Linguagens Interpretadas** - Linguagens em que o código, ao invés de ser compilado, é lido e executado por um programa - Python, JavaScript, BASIC...
-<br/><br/><br/>
-
-![](./images/intcomp.png)
-
----
 class: small-images, image-spaced
 
 # Referências para programar em python
@@ -62,7 +53,7 @@ O programa "Hello World" é o típico primeiro programa que todos os iniciantes 
 print("Hello World!")
 ```
 ```Java
-// Se possível, não toquem em Java :,D
+// O mesmo programa mas em Java :,D
 class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello World!");
@@ -85,13 +76,12 @@ De modo a simplicar a visão de uma variável pode-se equipará-la a uma caixa �
 
 # Variáveis
 
-Há 6 tipos de variáveis nativos de python (i.e, não necessitamos de ferramentas adicionais para trabalhar com as mesmas):
-- Números (ints e floats) (ex: **4** e **3.14159**, respetivamente)
+Existem diversos tipos de variáveis em Python:
+- Números (integers e floats) (ex: **4** e **3.14159**, respetivamente)
 - Booleanos (Verdadeiro ou Falso) (ex: **True** e **False**, respetivamente)
-- Strings (Cadeias de caracteres) (ex: **"O curso é bom (juro)"**) <-- **Não mutáveis!!**
+- Strings (Cadeias de caracteres) (ex: **"Boas, pessoal!"**)
 - Listas (ex: **["a", -3, True]**)
-- Dicionários (ex: **{"jogo": "Undertale", "score": 9}**)
-- Tuplos (ex: **(2,3)**) <-- **Não mutáveis!!**
+- etc.
 
 ```python
 var = 2         # variável com um valor inteiro
@@ -104,15 +94,18 @@ print(var)      # o resultado será "spe" visto que não há erro (em Python!) e
 ---
 # Operações com listas
 
-Ao contrário de variáveis como tuplos e strings, podem-se mudar os valores de uma lista, sejam eles quais foram. Um exemplo disso seria:
+As listas são constituídas por um número arbitrário de elementos. Cada um destes elementos pode ser acedido através da sua poição na lista (o **índice**). Na grande maioria das linguagens de programação, a contagem do índice começa por **0** e não por **1**. Podemos também mudar os valores de uma lista, sejam eles quais foram. Um exemplo disso seria:
 
 ```python
 list1 = [1,2,3,4]
 list1[2] = 5    # Altera o 3º elemento de list1 de 3 para 5
 list1[0] = 2    # Qual é o valor que é mudado?
 list1[-1] = 9   # Altera o último valor de list1
-
+list1[98] = 2   # IndexError, pois é um índice maior ao número de elementos
+                # da lista
 ```
+---
+# Operações com listas
 
 Para além disto, também temos diversos outros métodos que mexem com listas:
 - **.append(x)** - adiciona um valor ao final da lista
@@ -146,11 +139,7 @@ print(5//2)     # 2, pois arredonda para baixo
 
 ```
 ---
-class: center, middle
 
-![](./images/operators.png)
-
----
 class: center, middle, inverse
 # Condições
 
@@ -162,24 +151,30 @@ De modo a estabelecer comportamentos específicos do programa quando o mesmo cum
 - **"elif"**: ("else" + "if") se a(s) condição/condições proposta(s) anteriormente forem falsas e esta verdadeira, executa o código deste bloco
 - **"else"**: caso nenhuma das condições anteriores seja verdade, executa este bloco
 
+---
+# Condições
+
 Para criar as condições usadas nestes blocos de código, podem-se usar alguns dos seguintes **operadores lógicos:**
+- **"and"** e **"or"** (**logic AND** e **logic OR**)
+- **"not"** (**logic NOT**)
+
+De modo a estabelecer relações entre diferentes variáveis também temos os chamados **operadores relacionais**:
 - **">"** e **">="** (**maior que** e **maior ou igual a**)
 - **"<"** e **"<="** (**menor que** e **menor ou igual a**)
 - **"!="** e **"=="** (**diferente de** e **igual a**)
-- **"and"** e **"or"** (**logic AND** e **logic OR**)
-- **"not"** (**logic NOT**)
 
 ---
 # Condições
 
+Eis um exemplo:
 ```python
 num = 2
 
-if(num <= 1):                               # verificará se o valor da variável num
-    print("It is 1 or less!")               # é inferior ou igual a 1
+if(num <= 0):                               # verificará se o valor da variável num
+    print("It is 0 or negative!")           # é inferior ou igual a 0
 
-elif(num == 0):                             # verificará se o valor da variável num
-    print("It has the value of 0")          # é igual a 0
+elif(num == 1):                             # verificará se o valor da variável num
+    print("It has the value of 1")          # é igual a 1
 
 else:                                       # executará este print, pois não conseguiu
     print("Idk what this is my friend :(")  # encontrar nenhuma condição
@@ -212,17 +207,26 @@ for num in range(1, 5, 2):
 while num<10:
     # Executa algo enquanto a variável num for inferior a 10
 ```
-Se se quiser sair de um loop a uma dada altura, basta declarar um **break** enquanto que, para ignorar uma dada etapa do loop, pode-se utilizar o **continue**.
+
+---
+class: small-images
+# Ciclos
+
+Em Python, **break** e **continue** são palavras-chave que permitem controlar a execução de loops.
+- **break**: é usado para sair de um loop antes que ele termine naturalmente.
+- **continue**: é usado para ignorar a execução de uma determinada etapa do loop e passar para a próxima iteração.
+
+![](./images/ciclos_meme.png)
 
 ---
 class: center, middle, inverse
 # Funções
 ---
 # Funções
-As funções em Python têm como pincipal papel facilitar uma melhor organização, tornando o código mais "reciclável".
+As funções em Python têm como pincipal papel facilitar uma melhor organização, tornando o código mais "reutilizável".
 
 ```python
-def pair(x):         # Verifica se um número x é par
+def pair(x):                 # Verifica se um número x é par
     return x % 2 == 0
 
 for num in range(11):
@@ -253,6 +257,8 @@ class: extra-images
 - **Task 1**: Procura a variável correspondente à velocidade da bola e muda o seu valor
 - **Task 2**: Desenha um quadrado 4x4 no meio campo
 - **Task 3**: Faz o mesmo que a task 2 mas trabalhando com ciclos for
+- **Task 4**: Desenha a pontuação atual do jogo sempre que há um golo em qualquer um dos lados,  mantendo-na no ecrã durante 2 segundos sempre que o mesmo ocorre
 
+- **Bónus**: Tenta mudar as mecânicas do jogo ao ponto de o tornares semelhante a ice hockey
 
 ![](./images/pong.jpg)
