@@ -148,27 +148,25 @@ def game_update_ball(game, current_directions):
 
     # Handle ball at paddles
     if ball_pos[0] == 1:
-        if game[ball_pos[1] - 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-            current_directions = [Direction.UP if x ==
-                                    Direction.DOWN else x for x in current_directions]
+        if game[ball_pos[1]][ball_pos[0] - 1] == Element.LEFT_PADDLE:
             current_directions = [Direction.RIGHT if x ==
-                                Direction.LEFT else x for x in current_directions]
-        elif game[ball_pos[1] + 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-            current_directions = [Direction.DOWN if x ==
-                                    Direction.UP else x for x in current_directions]
-            current_directions = [Direction.RIGHT if x ==
-                                Direction.LEFT else x for x in current_directions]
+                                  Direction.LEFT else x for x in current_directions]
+            if game[ball_pos[1] - 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
+                current_directions = [Direction.UP if x ==
+                                      Direction.DOWN else x for x in current_directions]
+            elif game[ball_pos[1] + 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
+                current_directions = [Direction.DOWN if x ==
+                                      Direction.UP else x for x in current_directions]
     elif ball_pos[0] == len(game[0]) - 2:
-        if game[ball_pos[1] - 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-            current_directions = [Direction.UP if x ==
-                                    Direction.DOWN else x for x in current_directions]
+        if game[ball_pos[1]][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
             current_directions = [Direction.LEFT if x ==
-                                Direction.RIGHT else x for x in current_directions]
-        elif game[ball_pos[1] + 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-            current_directions = [Direction.DOWN if x ==
-                                    Direction.UP else x for x in current_directions]
-            current_directions = [Direction.LEFT if x ==
-                                Direction.RIGHT else x for x in current_directions]
+                                  Direction.RIGHT else x for x in current_directions]
+            if game[ball_pos[1] - 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
+                current_directions = [Direction.UP if x ==
+                                      Direction.DOWN else x for x in current_directions]
+            elif game[ball_pos[1] + 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
+                current_directions = [Direction.DOWN if x ==
+                                      Direction.UP else x for x in current_directions]
 
     # Move ball
     if ball_pos[0] == 0 or ball_pos[0] == len(game[0]) - 1:
