@@ -23,7 +23,6 @@ cs = Pin(5, Pin.OUT)
 
 display = max7219.Matrix8x8(spi, cs, 4)
 
-
 class Element:
     LEFT_PADDLE = 0
     RIGHT_PADDLE = 1
@@ -134,8 +133,16 @@ def draw_game(game):
 
     display.show()
 
+def draw_score(leftScore, rightScore):
+    display.fill(0)
+    if leftScore < 10:
+        display.text(str(leftScore), 8, 0, 1)
+    else:
+        display.text(str(leftScore), 0, 0, 1)
+    display.text(str(rightScore), DISPLAY_WIDTH - 16, 0, 1)
+    display.show()
 
-def game_update_ball(game, current_directions):
+def game_update_ball(game, current_directions, leftScore, rightScore):
     ball_pos = get_ball_position(game)
 
     # Handle ball at top/bottom of screen
@@ -148,30 +155,36 @@ def game_update_ball(game, current_directions):
 
     # Handle ball at paddles
     if ball_pos[0] == 1:
-        if game[ball_pos[1] - 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-            current_directions = [Direction.UP if x ==
-                                    Direction.DOWN else x for x in current_directions]
+        if game[ball_pos[1]][ball_pos[0] - 1] == Element.LEFT_PADDLE:
             current_directions = [Direction.RIGHT if x ==
-                                Direction.LEFT else x for x in current_directions]
-        elif game[ball_pos[1] + 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-            current_directions = [Direction.DOWN if x ==
-                                    Direction.UP else x for x in current_directions]
-            current_directions = [Direction.RIGHT if x ==
-                                Direction.LEFT else x for x in current_directions]
+                                  Direction.LEFT else x for x in current_directions]
+            if game[ball_pos[1] - 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
+                current_directions = [Direction.UP if x ==
+                                      Direction.DOWN else x for x in current_directions]
+            elif game[ball_pos[1] + 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
+                current_directions = [Direction.DOWN if x ==
+                                      Direction.UP else x for x in current_directions]
     elif ball_pos[0] == len(game[0]) - 2:
-        if game[ball_pos[1] - 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-            current_directions = [Direction.UP if x ==
-                                    Direction.DOWN else x for x in current_directions]
+        if game[ball_pos[1]][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
             current_directions = [Direction.LEFT if x ==
-                                Direction.RIGHT else x for x in current_directions]
-        elif game[ball_pos[1] + 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-            current_directions = [Direction.DOWN if x ==
-                                    Direction.UP else x for x in current_directions]
-            current_directions = [Direction.LEFT if x ==
-                                Direction.RIGHT else x for x in current_directions]
+                                  Direction.RIGHT else x for x in current_directions]
+            if game[ball_pos[1] - 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
+                current_directions = [Direction.UP if x ==
+                                      Direction.DOWN else x for x in current_directions]
+            elif game[ball_pos[1] + 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
+                current_directions = [Direction.DOWN if x ==
+                                      Direction.UP else x for x in current_directions]
 
     # Move ball
-    if ball_pos[0] == 0 or ball_pos[0] == len(game[0]) - 1:
+    restartGame = False
+    if ball_pos[0] == 0:
+        rightScore += 1
+        restartGame = True
+    if ball_pos[0] == len(game[0]) - 1:
+        leftScore += 1
+        restartGame = True
+
+    if restartGame:
         game = init_game(DISPLAY_WIDTH // ELEMENT_DISPLAY_SIZE,
                          DISPLAY_HEIGHT // ELEMENT_DISPLAY_SIZE)
         current_directions[0] = random.choice(
@@ -181,7 +194,7 @@ def game_update_ball(game, current_directions):
     else:
         game_move_ball(game, current_directions)
 
-    return game, current_directions
+    return game, current_directions, leftScore, rightScore
 
 
 def main():
@@ -193,15 +206,31 @@ def main():
     running = True
     current_directions = [Direction.RIGHT, Direction.DOWN]
     counter = 0
+
+    # Score variables
+    leftScore = 0
+    rightScore = 0
+    showScore = False
+
     while running:
+
+        if showScore:
+            draw_score(leftScore, rightScore)
+            showScore = False
+            time.sleep(2)
 
         yValue = yAxis.read_u16()
         yValue2 = yAxis2.read_u16()
             
         # Update ball
         if counter % (FPS // BALL_SPEED) == 0:
-            game, current_directions = game_update_ball(
-                game, current_directions)
+            game, current_directions, newLeftScore, newRightScore = game_update_ball(
+                game, current_directions, leftScore, rightScore)
+            if newLeftScore != leftScore or newRightScore != rightScore:
+                showScore = True
+                leftScore = newLeftScore
+                rightScore = newRightScore
+
             counter = 0
             
         # Move paddles (numbers calibrated according to the joystick used)
