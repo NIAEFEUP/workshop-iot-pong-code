@@ -9,20 +9,13 @@ FPS = 60
 BALL_SPEED = 15
 ELEMENT_DISPLAY_SIZE = 1
 
-# Initialize pico
-led = Pin(25, Pin.OUT)
+yAxis = ADC(Pin(26)) # Joystick 1
+yAxis2 = ADC(Pin(28)) # Joystick 2
 
-yAxis = ADC(Pin(26))
-button = Pin(17, Pin.IN, Pin.PULL_UP)
-
-yAxis2 = ADC(Pin(28))
-button2 = Pin(19, Pin.IN, Pin.PULL_UP)
-
+# Initialize LED matrix
 spi = SPI(0, polarity=1, phase=0, sck=Pin(2), mosi=Pin(3))
 cs = Pin(5, Pin.OUT)
-
 display = max7219.Matrix8x8(spi, cs, 4)
-
 
 class Element:
     LEFT_PADDLE = 0
@@ -52,21 +45,15 @@ def init_game(width, height):
     for _ in range(height):
         game.append([Element.EMPTY] * width)
 
-    leftPaddleOffset = random.randrange(-2, 3)
-    rightPaddleOffset = random.randrange(-2, 3)
-    
-    # Avoid symmetry
-    if leftPaddleOffset == rightPaddleOffset:
-        leftPaddleOffset += 1
-
-    # Set initial positions
+    # Set the Ball
     game[height // 2][width // 2] = Element.BALL
 
-    game[height // 2 - 1 + leftPaddleOffset][0] = Element.LEFT_PADDLE
-    game[height // 2 + leftPaddleOffset][0] = Element.LEFT_PADDLE
+    # Set the Players
+    game[height // 2 - 1][0] = Element.LEFT_PADDLE
+    game[height // 2][0] = Element.LEFT_PADDLE
 
-    game[height // 2 - 1 + rightPaddleOffset][width - 1] = Element.RIGHT_PADDLE
-    game[height // 2 + rightPaddleOffset][width - 1] = Element.RIGHT_PADDLE
+    game[height // 2 - 1][width - 1] = Element.RIGHT_PADDLE
+    game[height // 2][width - 1] = Element.RIGHT_PADDLE
 
     return game
 
@@ -138,35 +125,20 @@ def draw_game(game):
 def game_update_ball(game, current_directions):
     ball_pos = get_ball_position(game)
 
-    # Handle ball at top/bottom of screen
+    # Handle ball at top
     if ball_pos[1] == 0:
-        current_directions = [Direction.DOWN if x ==
-                              Direction.UP else x for x in current_directions]
+        current_directions = [current_directions[0], toogleDirection(current_directions[1])]
+    # Handle ball at bottom
     elif ball_pos[1] == len(game) - 1:
-        current_directions = [Direction.UP if x ==
-                              Direction.DOWN else x for x in current_directions]
+        current_directions = [current_directions[0], toogleDirection(current_directions[1])]
 
     # Handle ball at paddles
     if ball_pos[0] == 1:
         if game[ball_pos[1]][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-            current_directions = [Direction.RIGHT if x ==
-                                  Direction.LEFT else x for x in current_directions]
-            if game[ball_pos[1] - 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-                current_directions = [Direction.UP if x ==
-                                      Direction.DOWN else x for x in current_directions]
-            elif game[ball_pos[1] + 1][ball_pos[0] - 1] == Element.LEFT_PADDLE:
-                current_directions = [Direction.DOWN if x ==
-                                      Direction.UP else x for x in current_directions]
+            current_directions = [toogleDirection(current_directions[0]), current_directions[1]]
     elif ball_pos[0] == len(game[0]) - 2:
         if game[ball_pos[1]][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-            current_directions = [Direction.LEFT if x ==
-                                  Direction.RIGHT else x for x in current_directions]
-            if game[ball_pos[1] - 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-                current_directions = [Direction.UP if x ==
-                                      Direction.DOWN else x for x in current_directions]
-            elif game[ball_pos[1] + 1][ball_pos[0] + 1] == Element.RIGHT_PADDLE:
-                current_directions = [Direction.DOWN if x ==
-                                      Direction.UP else x for x in current_directions]
+            current_directions = [toogleDirection(current_directions[0]), current_directions[1]]
 
     # Move ball
     if ball_pos[0] == 0 or ball_pos[0] == len(game[0]) - 1:
@@ -180,6 +152,17 @@ def game_update_ball(game, current_directions):
         game_move_ball(game, current_directions)
 
     return game, current_directions
+
+
+def toogleDirection(direction):
+    if(direction == Direction.UP):
+        return Direction.DOWN
+    elif(direction == Direction.DOWN):
+        return Direction.UP
+    elif(direction == Direction.LEFT):
+        return Direction.RIGHT
+    elif(direction == Direction.RIGHT):
+        return Direction.LEFT
 
 
 def main():
