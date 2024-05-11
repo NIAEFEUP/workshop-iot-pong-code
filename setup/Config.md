@@ -1,3 +1,22 @@
+## Theoretical part
+
+The slides are available [here](https://workshop-pong-niaefeup.netlify.app/#1). 
+The estimated duration is 30 minutes, so they can understand everything calmly.
+
+## Required Components
+
+1x Raspberry Pi Pico
+5x LED Matrix 8x8
+2x Joystick 
+1x Micro-usb cable
+
+## Software Requirements
+
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Python 3](https://www.python.org/downloads/)
+- [MicroPico Extension](https://marketplace.visualstudio.com/items?itemName=paulober.pico-w-go)
+- [Git](https://git-scm.com/downloads) (optional - you can download the repository as a zip file)
+
 ## Connecting the wires
 
 If you need to rebuild the system, copy the [diagram.json](diagram.json) and paste it in the [simulation](https://wokwi.com/projects/new/pi-pico). You can follow all the ports you see there.
